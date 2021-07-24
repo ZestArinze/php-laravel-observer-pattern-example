@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\InvoiceCreated;
+use App\Listeners\NotifyAdminOfNewInvoice;
+use App\Listeners\NotifyCustomerOfNewInvoice;
+use App\Models\Invoice;
+use App\Observers\InvoiceObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +23,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        InvoiceCreated::class => [
+            NotifyCustomerOfNewInvoice::class,
+            NotifyAdminOfNewInvoice::class,
+        ],
     ];
 
     /**
@@ -27,6 +36,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Invoice::observe(InvoiceObserver::class);
     }
 }

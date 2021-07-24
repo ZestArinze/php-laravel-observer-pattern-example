@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\InvoiceCreated;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\Invoice;
@@ -11,7 +12,11 @@ class InvoiceController extends Controller
 {
     public function store(StoreInvoiceRequest $request) {
 
-        return Invoice::create($request->validated());
+        $invoice = Invoice::create($request->validated());
+
+        InvoiceCreated::dispatch($invoice);
+
+        return $invoice;
     }
 
     public function update(UpdateInvoiceRequest $request, Invoice $invoice) {
