@@ -15,6 +15,8 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
+            $table->double('subtotal');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
